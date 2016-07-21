@@ -77,14 +77,19 @@ for i in range(7670):
     for j in range(78):
 #        if j < 77:
         density[i,j] = svan(salt[i,j], temp[i,j], 10)
-'''    for j in range(78):
+#        a = 0
+    for j in range(78):
+        
         if j < 77:
 #            print fabs(zax[j])
             kz[i,j,:,:] = 0.5E-6 /((9.81/(1000.+(density[i,j,:,:]+density[i,j+1,:,:])/2.)
                           *(fabs(density[i,j+1,:,:]-density[i,j,:,:])
-                          /(fabs(zax[j]-zax[j+1]))))**0.5)
+                          /(fabs(zax[j])-fabs(zax[j+1]))))**0.5)
+#            a = a + 1
+#            print a
+#            print zax[j]-zax[j+1]
         else : 
             kz[i,j,:,:] = kz[i,j-1,:,:]             
-'''  
-
+  
+fl.close()
 print '*** SUCCESS writing  file B3zax-kz.nc'
