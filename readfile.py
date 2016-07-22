@@ -6,7 +6,7 @@ Created on 15. jul. 2016
 
 from netCDF4 import Dataset
 from math import sqrt,fabs
-#import numpy as np
+import numpy as np
 #import numpy.ma as ma
 from shutil import copyfile
 copyfile('B3zax1.nc', 'B3zax-kz.nc')
@@ -20,8 +20,7 @@ time = fl.variables['time'][:]
 latc = fl.variables['latc'][:]
 lonc = fl.variables['lonc'][:]
 
-kz = fl.createVariable("kz","f4",("time",'zax','latc', 'lonc' )) # time,zax,latc,lonc
-density = fl.createVariable("density","f4",("time",'zax','latc', 'lonc' )) # time,zax,latc,lonc
+kz = fl.createVariable("kz","f4",("time",'zax')) # time,zax,latc,lonc
 
 def svan(s, t, po):
     r3500 = 1028.1063
@@ -72,24 +71,23 @@ def svan(s, t, po):
         return sigma
 
 
+density_temp = np.zeros(temp.shape[0])
+kz_temp = np.zeros((temp.shape[0],temp.shape[1]))
+dz = np.zeros(temp.shape[1])
 
-for i in range(7670):    
-    for j in range(78):
-#        if j < 77:
-        density[i,j] = svan(salt[i,j], temp[i,j], 10)
-#        a = 0
-    for j in range(78):
-        
-        if j < 77:
-#            print fabs(zax[j])
-            kz[i,j,:,:] = 0.5E-6 /((9.81/(1000.+(density[i,j,:,:]+density[i,j+1,:,:])/2.)
-                          *(fabs(density[i,j+1,:,:]-density[i,j,:,:])
-                          /(fabs(zax[j])-fabs(zax[j+1]))))**0.5)
-#            a = a + 1
-#            print a
-#            print zax[j]-zax[j+1]
+dz[:]=1.
+
+for i in range(time.shape[0]):    
+    for j in range(zax.shape[0]):
+        density_temp[j] = svan(salt[i,j], temp[i,j], zax[j])
+    for j in range(zax.shape[0]):        
+        if j < (zax.shape[0]-1):
+            kz_temp[i,j] = 0.5E-6 /(sqrt(9.81/
+                                    (1000.+(density_temp[j]+density_temp[j+1])/2.)
+                          *max(0.0000001,(fabs(density_temp[j+1]-density_temp[j])/(dz[j])))))
         else : 
-            kz[i,j,:,:] = kz[i,j-1,:,:]             
-  
+            kz_temp[i,j] = kz_temp[i,j-1]
+
+kz[:,:] = kz_temp
 fl.close()
 print '*** SUCCESS writing  file B3zax-kz.nc'
