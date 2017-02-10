@@ -9,9 +9,11 @@ from math import sqrt,fabs
 import numpy as np
 #import numpy.ma as ma
 from shutil import copyfile
-copyfile('B3zax1.nc', 'B3zax-kz.nc')
+copyfile('LL12zax.nc', 'LL12zax-kz.nc')
 
-nc_file_out = 'B3zax-kz.nc'
+#nc_file_out = 'B3zax-kz.nc'
+nc_file_out = 'LL12zax-kz.nc'
+
 fl = Dataset(nc_file_out, mode='a')
 temp = fl.variables['temp'][:]
 salt = fl.variables['salt'][:]
@@ -90,4 +92,4 @@ for i in range(time.shape[0]):
 
 kz[:,:] = kz_temp
 fl.close()
-print '*** SUCCESS writing  file B3zax-kz.nc'
+print ('*** SUCCESS writing  ncfile ')
