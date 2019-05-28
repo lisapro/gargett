@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 *.project
 *.pdf
 *.pydevproject
 *.png
 *.eps
 *.nc
-=======
-*.nc
-*.project
-*.pydevproject
->>>>>>> 38a240c71017715eb0b17a592e678b7c28a04467
