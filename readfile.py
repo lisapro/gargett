@@ -20,7 +20,7 @@ time = fl.variables['time'][:]
 latc = fl.variables['latc'][:]
 lonc = fl.variables['lonc'][:]
 
-kz = fl.createVariable("kz","f4",("time",'zax')) # time,zax,latc,lonc
+kz = fl.createVariable("kz","f4",("time",'zax','latc','lonc')) # time,zax,latc,lonc
 
 def svan(s, t, po):
     r3500 = 1028.1063
@@ -86,8 +86,8 @@ for i in range(time.shape[0]):
                                     (1000.+(density_temp[j]+density_temp[j+1])/2.)
                           *max(0.0000001,(fabs(density_temp[j+1]-density_temp[j])/(dz[j])))))
         else : 
-            kz_temp[i,j] = kz_temp[i,j-1]
+            kz_temp[i,j] = kz_temp[i,j-1,:,:]
 
-kz[:,:] = kz_temp
+kz[:,:,:,:] = kz_temp
 fl.close()
 print '*** SUCCESS writing  file B3zax-kz.nc'
